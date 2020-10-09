@@ -1,0 +1,36 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  api-dev:
+    runs-on: alpine-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: thomas007g/gurl-shortener
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.TOKEN }}
+        registry: docker.pkg.github.com
+        tags: "dev, ${{ github.sha }}-dev"
+        buildoptions: --target dev
+  
+  api:
+    runs-on: alpine-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: thomas007g/gurl-shortner
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.TOKEN }}
+        registry: docker.pkg.github.com
+        tags: "latest, ${{ github.sha }}-prod"
